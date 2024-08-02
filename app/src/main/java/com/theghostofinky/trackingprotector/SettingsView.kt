@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Divider
@@ -40,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -88,14 +88,14 @@ fun SettingsView(onExitSettings: () -> Unit) {
                 )
             }
             Divider()
-            SettingsElement(text = "Comment context") {
+            SettingsElement(text = "Comment context:") {
                 NumericInput(
                     name = "Context",
                     prefKey = PrefKeys.CONTEXT_COUNT
                 )
             }
             Divider()
-            SettingsElement(text = "Instance") {
+            SettingsElement(text = "Instance:") {
                 TextInput(
                     name = "URL",
                     prefKey = PrefKeys.INSTANCE,
@@ -127,17 +127,11 @@ fun SettingsElement(
         )
         Box(
             modifier = Modifier.width(200.dp)
-        ){
+        ) {
             content()
         }
     }
 }
-
-val ActionIcons = hashMapOf<Actions, ImageVector>(
-    Actions.SHARE to Icons.Filled.Share,
-    Actions.COPY to Icons.Filled.Create,
-    Actions.OPEN to Icons.Filled.ExitToApp
-)
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
@@ -152,6 +146,12 @@ fun ActionDropDown(name: String, prefKey: Preferences.Key<Int>) {
         )
     }
 
+    val actionIcons = hashMapOf<Actions, ImageVector>(
+        Actions.SHARE to Icons.Filled.Share,
+        Actions.COPY to ImageVector.vectorResource(R.drawable.copy_icon),
+        Actions.OPEN to Icons.Filled.ExitToApp
+    )
+
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = !expanded },
@@ -162,7 +162,7 @@ fun ActionDropDown(name: String, prefKey: Preferences.Key<Int>) {
             readOnly = true,
             value = selectedOption.name.lowercase(),
             label = { Text(name) },
-            onValueChange = {/*NEVER USED*/ },
+            onValueChange = { /*NEVER USED*/ },
             modifier = Modifier.menuAnchor(),
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(
@@ -179,7 +179,7 @@ fun ActionDropDown(name: String, prefKey: Preferences.Key<Int>) {
                     text = { Text(it.name.lowercase()) },
                     leadingIcon = {
                         Icon(
-                            ActionIcons[it]!!,
+                            actionIcons[it]!!,
                             contentDescription = null
                         )
                     },
@@ -221,7 +221,7 @@ fun NumericInput(name: String, prefKey: Preferences.Key<Int>) {
                 if (trimmedValue.isEmpty()) {
                     return@launch
                 }
-                val intVal = value.runCatching { trimmedValue.toInt() }
+                val intVal = runCatching { trimmedValue.toInt() }
                 intVal.fold(
                     onSuccess = {
                         if (it > 0) {

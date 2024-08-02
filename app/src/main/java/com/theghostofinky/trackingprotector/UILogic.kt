@@ -130,8 +130,10 @@ fun openURL(url: String) {
 fun copyURL(url: String) {
     val clipboard = getSystemService(MainActivity.appContext, ClipboardManager::class.java)
     val clip = ClipData.newPlainText("clean URL", url)
-    clipboard?.setPrimaryClip(clip)
-    sendToast("Copied URL to clipboard")
+    clipboard?.let {
+        it.setPrimaryClip(clip)
+        sendToast("Copied URL to clipboard")
+    }
 }
 
 fun sendToast(toastText: String, time: Int = Toast.LENGTH_SHORT) {

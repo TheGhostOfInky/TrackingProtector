@@ -37,7 +37,7 @@ class PreferencesDatabase(context: Context) {
                 throw it
             }
         }.map {
-            (it[key] ?: defaultValue) as T
+            it[key] ?: defaultValue
         }
     }
 

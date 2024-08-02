@@ -43,7 +43,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainView(onOpenSettings: () -> Unit) {
     val scope = rememberCoroutineScope()
-    var drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     AppSideBar(drawerState, onOpenSettings) {
         Scaffold(
@@ -75,7 +75,6 @@ fun MainView(onOpenSettings: () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppSideBar(
     drawerState: DrawerState,
@@ -103,7 +102,6 @@ fun AppSideBar(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InputBox(innerPadding: PaddingValues) {
     var textBoxInput by remember { mutableStateOf("") }
@@ -124,7 +122,9 @@ fun InputBox(innerPadding: PaddingValues) {
         TextField(
             value = textBoxInput,
             label = { Text("URL") },
-            onValueChange = { textBoxInput = it }
+            onValueChange = { textBoxInput = it },
+            modifier = Modifier.padding(20.dp, 5.dp, 20.dp, 20.dp),
+            singleLine = true
         )
         Button(
             modifier = Modifier.width(180.dp),

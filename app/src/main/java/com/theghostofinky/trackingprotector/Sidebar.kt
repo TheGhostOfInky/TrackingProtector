@@ -1,6 +1,8 @@
 package com.theghostofinky.trackingprotector
 
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,7 +29,11 @@ fun Sidebar(
         scrimColor = MaterialTheme.colorScheme.primary,
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet {
+            ModalDrawerSheet(
+                modifier = Modifier
+                    .width(240.dp)
+                    .fillMaxHeight()
+            ) {
                 Text(
                     title,
                     fontSize = 18.sp,

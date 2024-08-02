@@ -2,10 +2,9 @@ package com.theghostofinky.trackingprotector
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
-import io.ktor.client.request.get
+import io.ktor.client.request.head
 import io.ktor.client.statement.HttpResponse
 import java.net.URL
-import java.util.regex.Pattern
 
 @Suppress("unused")
 class RedditURL(srcUrl: String) {
@@ -73,20 +72,18 @@ suspend fun untrackURL(url: String): RedditURL {
         mutUrl = "https://$url"
     }
 
-    val trackerPattern = Pattern.compile(
+    val pattern = Regex(
         "^https?://(?:\\w+\\.)?reddit\\.com/r/[\\w_]+/s/\\w+\$",
-        Pattern.CASE_INSENSITIVE
+        RegexOption.IGNORE_CASE
     )
 
-    val inputMatcher = trackerPattern.matcher(mutUrl)
-
-    if (!inputMatcher.find()) {
+    if (!pattern.matches(mutUrl)) {
         throw Exception("Invalid URL")
     }
 
     val loc = getRedirect(mutUrl)
 
-    if (trackerPattern.matcher(loc).find()) {
+    if (pattern.matches(loc)) {
         return untrackURL(loc)
     }
 
@@ -98,7 +95,7 @@ suspend fun getRedirect(url: String): String {
         followRedirects = false
     }
 
-    val response: HttpResponse = client.get(url)
+    val response: HttpResponse = client.head(url)
 
     val status = response.status.value
     val location = response.headers["location"]

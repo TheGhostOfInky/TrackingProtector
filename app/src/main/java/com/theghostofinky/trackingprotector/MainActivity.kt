@@ -32,23 +32,19 @@ class MainActivity : ComponentActivity() {
         appContext = applicationContext
 
         when (intent?.action) {
-            Intent.ACTION_SEND -> {
-                if (intent.type == "text/plain") {
-                    intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
-                        runBlocking {
-                            withContext(Dispatchers.IO) {
-                                handleShare(it)
-                            }
+            Intent.ACTION_SEND -> if (intent.type == "text/plain") {
+                intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
+                    runBlocking {
+                        withContext(Dispatchers.IO) {
+                            handleShare(it)
                         }
                     }
                 }
             }
 
-            Intent.ACTION_VIEW -> {
-                runBlocking {
-                    withContext(Dispatchers.IO) {
-                        handleOpen(intent.data)
-                    }
+            Intent.ACTION_VIEW -> runBlocking {
+                withContext(Dispatchers.IO) {
+                    handleOpen(intent.data)
                 }
             }
         }
